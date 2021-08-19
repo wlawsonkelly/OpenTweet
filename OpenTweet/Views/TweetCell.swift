@@ -17,7 +17,7 @@ class TweetCell: UITableViewCell {
         let author: String
         let content: String
         let avatar: String
-        let date: String
+        let date: Date
         let inReplyTo: String?
         var height: CGFloat
 
@@ -25,7 +25,7 @@ class TweetCell: UITableViewCell {
             self.id = model.id ?? ""
             self.author = model.author ?? ""
             self.content = model.content ?? ""
-            self.date = model.date ?? ""
+            self.date = model.getDate(model.date)
             self.avatar = model.avatar ?? ""
             self.inReplyTo = model.inReplyTo ?? ""
             self.height = model.getHeight(model: model)
@@ -136,7 +136,7 @@ class TweetCell: UITableViewCell {
     public func configure(with viewModel: ViewModel) {
         contentLabel.text = viewModel.content
         authorLabel.text = viewModel.author
-        dateLabel.text = viewModel.date
+        dateLabel.text = viewModel.date.getFormattedDate(format: "MMM d, h:mm a")
         if viewModel.inReplyTo != "" {
             inReplyToLabel.text = "In reply to \(viewModel.inReplyTo ?? "")"
         } else {

@@ -18,7 +18,7 @@ struct Tweet: Codable {
     let content: String?
     let avatar: String?
     let inReplyTo: String?
-    let date: String?
+    let date: String
 
     public func getHeight(model: Tweet) -> CGFloat {
         guard let count = model.content?.count else {
@@ -34,4 +34,11 @@ struct Tweet: Codable {
         return 100
     }
 
+    public func getDate(_ string: String) -> Date {
+        let dateFormatter = ISO8601DateFormatter()
+        let otherDateFormatter = DateFormatter()
+        otherDateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
+        guard let date = dateFormatter.date(from: string) else { return otherDateFormatter.date(from: string)! }
+        return date
+    }
 }

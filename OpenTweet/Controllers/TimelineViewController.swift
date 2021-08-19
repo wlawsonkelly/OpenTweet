@@ -10,7 +10,7 @@ import UIKit
 
 class TimelineViewController: UIViewController {
 
-    private var viewModels = [TweetCell.ViewModel]()
+    var viewModels = [TweetCell.ViewModel]()
     var tweets: [Tweet] = []
     var replyId: String?
 
@@ -77,7 +77,20 @@ class TimelineViewController: UIViewController {
                 .init(model: tweet)
             )
         }
-        self.viewModels = viewModels
+        if self.viewModels.count < 1 {
+            self.viewModels = viewModels
+            self.viewModels.sort(by: { $0.date > $1.date })
+        } else {
+            let newViewModels = viewModels.sorted(by: ({ $0.date > $1.date }))
+            self.viewModels.append(contentsOf: newViewModels)
+        }
+    }
+
+    private func getDate(_ string: String) -> Date {
+        let isoDate = "2016-04-14T10:44:00+0000"
+        let dateFormatter = ISO8601DateFormatter()
+        let date = dateFormatter.date(from:isoDate)!
+        return date
     }
 
     @objc fileprivate func handleDismiss() {
@@ -95,7 +108,6 @@ extension TimelineViewController: UITableViewDelegate, UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: TweetCell.identifier, for: indexPath) as? TweetCell else {
             fatalError()
         }
-        viewModels.sort(by: { $0.date < $1.date })
         cell.configure(with: viewModels[indexPath.row])
         return cell
     }
@@ -108,7 +120,7 @@ extension TimelineViewController: UITableViewDelegate, UITableViewDataSource {
         let tweet = viewModels[indexPath.row]
         let timeLineVC = TimelineViewController()
         timeLineVC.replyId = tweet.id
-        timeLineVC.tweets.append(.init(id: tweet.id, author: tweet.author, content: tweet.content, avatar: tweet.avatar, inReplyTo: tweet.inReplyTo, date: tweet.date))
+        timeLineVC.viewModels.append(.init(model: .init(id: tweet.id, author: tweet.author, content: tweet.content, avatar: tweet.avatar, inReplyTo: tweet.inReplyTo, date: "\(tweet.date)")))
         let navVC = UINavigationController(rootViewController: timeLineVC)
         navVC.modalPresentationStyle = .fullScreen
         self.present(navVC, animated: true)
