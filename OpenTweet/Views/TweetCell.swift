@@ -10,6 +10,7 @@ import UIKit
 import SDWebImage
 
 class TweetCell: UITableViewCell {
+    
     static let identifier = "TweetCell"
 
     struct ViewModel {
@@ -134,7 +135,6 @@ class TweetCell: UITableViewCell {
     }
 
     public func configure(with viewModel: ViewModel) {
-
         contentLabel.attributedText = String.highlight(from: viewModel.content)
         authorLabel.text = viewModel.author
         dateLabel.text = viewModel.date.getFormattedDate(format: "MMM d, h:mm a")

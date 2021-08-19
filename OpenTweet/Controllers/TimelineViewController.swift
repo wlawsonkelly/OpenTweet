@@ -53,13 +53,17 @@ class TimelineViewController: UIViewController {
             switch result {
             case .success(let timeline):
                 if self?.replyId == "" {
-                    self?.tweets = (timeline.timeline?.filter({$0.inReplyTo == ""}))!
+                    guard let opTweets = timeline.timeline?.filter({$0.inReplyTo == ""})  else {
+                        return
+                    }
+                    self?.tweets = opTweets
                 } else {
-                    let replyTweets = (timeline.timeline?.filter({$0.inReplyTo
+                    guard let replyTweets = (timeline.timeline?.filter({$0.inReplyTo
                         == self?.replyId
-                    }))!
+                    })) else {
+                        return
+                    }
                     self?.tweets.append(contentsOf: replyTweets)
-                    // TODO get rid of !
                 }
             case .failure(let error):
                 print(error)
