@@ -17,10 +17,14 @@ extension String {
     static func highlight(from string: String) -> NSMutableAttributedString {
         let newString = string as NSString
         var att = NSMutableAttributedString(string: newString as String)
-        let r = newString.range(of: "@\\w.*?\\b", options: .regularExpression, range: NSMakeRange(0, newString.length))
-        if r.length > 0 {
-            att.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.blue, range: r)
-            return att
+        let atRange = newString.range(of: "@\\w.*?\\b", options: .regularExpression, range: NSMakeRange(0, newString.length))
+        if atRange.length > 0 {
+            att.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.blue, range: atRange)
+        }
+        let linkRegexString = "((https|http)://)((\\w|-)+)(([.]|[/])((\\w|-)+))+"
+        let linkRange = newString.range(of: linkRegexString, options: .regularExpression, range: NSMakeRange(0, newString.length))
+        if linkRange.length > 0 {
+            att.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.red, range: linkRange)
         }
         return att
     }
