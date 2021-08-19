@@ -16,7 +16,7 @@ extension String {
 
     static func highlight(from string: String) -> NSMutableAttributedString {
         let newString = string as NSString
-        var att = NSMutableAttributedString(string: newString as String)
+        let att = NSMutableAttributedString(string: newString as String)
         let atRange = newString.range(of: "@\\w.*?\\b", options: .regularExpression, range: NSMakeRange(0, newString.length))
         if atRange.length > 0 {
             att.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.blue, range: atRange)
