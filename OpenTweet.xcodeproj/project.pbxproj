@@ -120,7 +120,6 @@
 				009C4C741D9F0CD600F0BC6C /* LaunchScreen.storyboard */,
 				009C4C721D9F0CD600F0BC6C /* Assets.xcassets */,
 				009C4C771D9F0CD600F0BC6C /* Info.plist */,
-				009C4C9A1D9F0D4100F0BC6C /* timeline.json */,
 				082FE87326CC4B4600F03311 /* APICaller.swift */,
 				082FE87C26CDB9FE00F03311 /* Extension.swift */,
 			);
@@ -148,6 +147,7 @@
 		009C4C991D9F0D4100F0BC6C /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				009C4C9A1D9F0D4100F0BC6C /* timeline.json */,
 			);
 			path = Data;
 			sourceTree = "<group>";

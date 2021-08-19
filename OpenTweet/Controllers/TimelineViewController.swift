@@ -11,7 +11,7 @@ import UIKit
 class TimelineViewController: UIViewController {
 
     private var viewModels = [TweetCell.ViewModel]()
-    private var tweets: [Tweet] = []
+    var tweets: [Tweet] = []
     var replyId: String?
 
     private let tableView: UITableView = {
@@ -54,9 +54,10 @@ class TimelineViewController: UIViewController {
                 if self?.replyId == "" {
                     self?.tweets = (timeline.timeline?.filter({$0.inReplyTo == ""}))!
                 } else {
-                    self?.tweets = (timeline.timeline?.filter({$0.inReplyTo
+                    let replyTweets = (timeline.timeline?.filter({$0.inReplyTo
                         == self?.replyId
                     }))!
+                    self?.tweets.append(contentsOf: replyTweets)
                     // TODO get rid of !
                 }
             case .failure(let error):
@@ -107,6 +108,7 @@ extension TimelineViewController: UITableViewDelegate, UITableViewDataSource {
         let tweet = viewModels[indexPath.row]
         let timeLineVC = TimelineViewController()
         timeLineVC.replyId = tweet.id
+        timeLineVC.tweets.append(.init(id: tweet.id, author: tweet.author, content: tweet.content, avatar: tweet.avatar, inReplyTo: tweet.inReplyTo, date: tweet.date))
         let navVC = UINavigationController(rootViewController: timeLineVC)
         navVC.modalPresentationStyle = .fullScreen
         self.present(navVC, animated: true)
