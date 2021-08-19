@@ -12,6 +12,7 @@ class TimelineViewController: UIViewController {
 
     private var viewModels = [TweetCell.ViewModel]()
     private var tweets: [Tweet] = []
+    var replyId: String?
 
     private let tableView: UITableView = {
         let tv = UITableView()
@@ -19,13 +20,13 @@ class TimelineViewController: UIViewController {
         return tv
     }()
 
-	override func viewDidLoad() {
-		super.viewDidLoad()
+    override func viewDidLoad() {
+        super.viewDidLoad()
         navigationItem.title = "OpenTweet"
         navigationController?.navigationBar.prefersLargeTitles = true
         setupTableView()
         getTimeline()
-	}
+    }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -36,6 +37,9 @@ class TimelineViewController: UIViewController {
         view.addSubview(tableView)
         tableView.delegate = self
         tableView.dataSource = self
+        if replyId != nil {
+            navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Back", style: .plain, target: self, action: #selector(handleDismiss))
+        }
     }
 
     private func getTimeline() {
@@ -47,7 +51,14 @@ class TimelineViewController: UIViewController {
             }
             switch result {
             case .success(let timeline):
-                self?.tweets = timeline.timeline!
+                if self?.replyId == "" {
+                    self?.tweets = (timeline.timeline?.filter({$0.inReplyTo == ""}))!
+                } else {
+                    self?.tweets = (timeline.timeline?.filter({$0.inReplyTo
+                        == self?.replyId
+                    }))!
+                    // TODO get rid of !
+                }
             case .failure(let error):
                 print(error)
             }
@@ -67,6 +78,10 @@ class TimelineViewController: UIViewController {
         }
         self.viewModels = viewModels
     }
+
+    @objc fileprivate func handleDismiss() {
+        self.dismiss(animated: true)
+    }
 }
 
 extension TimelineViewController: UITableViewDelegate, UITableViewDataSource {
@@ -81,7 +96,6 @@ extension TimelineViewController: UITableViewDelegate, UITableViewDataSource {
         }
         viewModels.sort(by: { $0.date < $1.date })
         cell.configure(with: viewModels[indexPath.row])
-        cell.delegate = self
         return cell
     }
 
@@ -90,12 +104,11 @@ extension TimelineViewController: UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-    }
-}
-
-extension TimelineViewController: TweetCellDelegate {
-    func didUpdateHeight() {
-        tableView.reloadData()
+        let tweet = viewModels[indexPath.row]
+        let timeLineVC = TimelineViewController()
+        timeLineVC.replyId = tweet.id
+        let navVC = UINavigationController(rootViewController: timeLineVC)
+        navVC.modalPresentationStyle = .fullScreen
+        self.present(navVC, animated: true)
     }
 }

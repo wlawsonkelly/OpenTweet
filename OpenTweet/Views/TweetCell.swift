@@ -9,15 +9,11 @@
 import UIKit
 import SDWebImage
 
-protocol TweetCellDelegate: AnyObject {
-    func didUpdateHeight()
-}
-
 class TweetCell: UITableViewCell {
     static let identifier = "TweetCell"
-    weak var delegate: TweetCellDelegate?
 
     struct ViewModel {
+        let id: String
         let author: String
         let content: String
         let avatar: String
@@ -26,6 +22,7 @@ class TweetCell: UITableViewCell {
         var height: CGFloat
 
         init(model: Tweet) {
+            self.id = model.id ?? ""
             self.author = model.author ?? ""
             self.content = model.content ?? ""
             self.date = model.date ?? ""
@@ -74,6 +71,7 @@ class TweetCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.backgroundColor = .white
+        selectionStyle = .none
         addSubviews(authorLabel, contentLabel, dateLabel, inReplyToLabel, avatarImageView)
     }
 
