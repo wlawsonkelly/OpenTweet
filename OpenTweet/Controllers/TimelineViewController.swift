@@ -115,6 +115,9 @@ extension TimelineViewController: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let tweet = viewModels[indexPath.row]
+        if self.replyId == tweet.id {
+            return
+        }
         let timeLineVC = TimelineViewController()
         timeLineVC.replyId = tweet.id
         timeLineVC.replyAuthor = tweet.author
