@@ -18,7 +18,7 @@ class TweetCell: UITableViewCell {
         let content: String
         let avatar: String
         let date: Date
-        let inReplyTo: String?
+        var inReplyTo: String?
         var height: CGFloat
 
         init(model: Tweet) {

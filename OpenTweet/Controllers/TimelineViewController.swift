@@ -102,6 +102,7 @@ extension TimelineViewController: UITableViewDelegate, UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: TweetCell.identifier, for: indexPath) as? TweetCell else {
             fatalError()
         }
+        viewModels[0].inReplyTo = ""
         cell.configure(with: viewModels[indexPath.row])
         if replyId != nil && viewModels[indexPath.row].inReplyTo != "" && viewModels.count > 1 {
             cell.inReplyToLabel.text = "In reply to \(replyAuthor ?? "")"
@@ -120,8 +121,8 @@ extension TimelineViewController: UITableViewDelegate, UITableViewDataSource {
         }
         let timeLineVC = TimelineViewController()
         timeLineVC.replyId = tweet.id
-        timeLineVC.replyAuthor = tweet.author
         timeLineVC.viewModels.append(.init(model: .init(id: tweet.id, author: tweet.author, content: tweet.content, avatar: tweet.avatar, inReplyTo: tweet.inReplyTo, date: "\(tweet.date)")))
+        timeLineVC.replyAuthor = timeLineVC.viewModels[0].author
         let navVC = UINavigationController(rootViewController: timeLineVC)
         navVC.modalPresentationStyle = .fullScreen
         self.present(navVC, animated: true)
