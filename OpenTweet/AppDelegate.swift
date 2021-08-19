@@ -13,9 +13,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	var window: UIWindow?
 
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 		// Override point for customization after application launch.
+        let timeLineVC = TimelineViewController()
+        let navVC = UINavigationController(rootViewController: timeLineVC)
+        window = UIWindow()
+        window?.makeKeyAndVisible()
+        window?.rootViewController = navVC
 		return true
 	}
 
