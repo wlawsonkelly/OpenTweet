@@ -13,6 +13,7 @@ class TimelineViewController: UIViewController {
     var viewModels = [TweetCell.ViewModel]()
     var tweets: [Tweet] = []
     var replyId: String?
+    var replyAuthor: String?
 
     private let tableView: UITableView = {
         let tv = UITableView()
@@ -86,13 +87,6 @@ class TimelineViewController: UIViewController {
         }
     }
 
-    private func getDate(_ string: String) -> Date {
-        let isoDate = "2016-04-14T10:44:00+0000"
-        let dateFormatter = ISO8601DateFormatter()
-        let date = dateFormatter.date(from:isoDate)!
-        return date
-    }
-
     @objc fileprivate func handleDismiss() {
         self.dismiss(animated: true)
     }
@@ -109,6 +103,9 @@ extension TimelineViewController: UITableViewDelegate, UITableViewDataSource {
             fatalError()
         }
         cell.configure(with: viewModels[indexPath.row])
+        if replyId != nil && viewModels[indexPath.row].inReplyTo != "" && viewModels.count > 1 {
+            cell.inReplyToLabel.text = "In reply to \(replyAuthor ?? "")"
+        }
         return cell
     }
 
@@ -120,6 +117,7 @@ extension TimelineViewController: UITableViewDelegate, UITableViewDataSource {
         let tweet = viewModels[indexPath.row]
         let timeLineVC = TimelineViewController()
         timeLineVC.replyId = tweet.id
+        timeLineVC.replyAuthor = tweet.author
         timeLineVC.viewModels.append(.init(model: .init(id: tweet.id, author: tweet.author, content: tweet.content, avatar: tweet.avatar, inReplyTo: tweet.inReplyTo, date: "\(tweet.date)")))
         let navVC = UINavigationController(rootViewController: timeLineVC)
         navVC.modalPresentationStyle = .fullScreen

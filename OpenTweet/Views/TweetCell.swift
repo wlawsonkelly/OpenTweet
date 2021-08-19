@@ -52,7 +52,7 @@ class TweetCell: UITableViewCell {
         return label
     }()
 
-    private let inReplyToLabel: UILabel = {
+    let inReplyToLabel: UILabel = {
         let label = UILabel()
         label.textColor = .secondaryLabel
         label.font = .systemFont(ofSize: 16, weight: .light)
@@ -134,14 +134,9 @@ class TweetCell: UITableViewCell {
     }
 
     public func configure(with viewModel: ViewModel) {
-        contentLabel.text = viewModel.content
+        contentLabel.attributedText = String.highlight(from: viewModel.content)
         authorLabel.text = viewModel.author
         dateLabel.text = viewModel.date.getFormattedDate(format: "MMM d, h:mm a")
-        if viewModel.inReplyTo != "" {
-            inReplyToLabel.text = "In reply to \(viewModel.inReplyTo ?? "")"
-        } else {
-            inReplyToLabel.removeFromSuperview()
-        }
         guard let imageUrl = URL(string: viewModel.avatar) else {
             return avatarImageView.image = UIImage(named: "twitter-egg.jpg")
         }

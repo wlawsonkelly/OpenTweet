@@ -13,6 +13,17 @@ extension String {
         let date = Date(timeIntervalSince1970: timeInterval)
         return DateFormatter.prettyDateFormatter.string(from: date)
     }
+
+    static func highlight(from string: String) -> NSMutableAttributedString {
+        let newString = string as NSString
+        var att = NSMutableAttributedString(string: newString as String)
+        let r = newString.range(of: "@\\w.*?\\b", options: .regularExpression, range: NSMakeRange(0, newString.length))
+        if r.length > 0 {
+            att.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.blue, range: r)
+            return att
+        }
+        return att
+    }
 }
 
 extension DateFormatter {
